@@ -11,19 +11,32 @@
 
 function jumpLatestWb() {
   let latest_wb_arr = document.querySelectorAll('[title="最新微博"]')
-  console.log("begin process latest: " + latest_wb_arr.length)
+  // console.log("begin process latest: " + latest_wb_arr.length)
   if (latest_wb_arr.length == 0) {
-    return
+    return false
   }
 
   let group_href = latest_wb_arr[0].parentElement.href
   console.log("my url: " + group_href)
 
   location.replace(group_href);
+  
+  return true
+}
+
+function retryRun() {
+  var retryCnt = 100
+  var timer = setInterval(function() {
+    if (jumpLatestWb() || retryCnt < 0) {
+      clearInterval(timer)
+    }
+    retryCnt--
+  }, 100)
 }
 
 (function() {
   'use strict'
 
-  window.addEventListener('load', jumpLatestWb);
+  retryRun()
+  // window.addEventListener('load', jumpLatestWb, true);
 })();
